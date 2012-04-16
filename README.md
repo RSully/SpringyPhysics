@@ -8,4 +8,4 @@ Simulation of springy-physics using Hooke's Law.
 - http://en.wikipedia.org/wiki/Damping
 - http://en.wikipedia.org/wiki/Drag_(physics)
 
-*Inspired by [Alex's "Mesh"](https://github.com/unixpickle/Mesh). I wanted to create something similar without seeing his source before hand. *
+*Inspired by [Alex's "Mesh"](https://github.com/unixpickle/Mesh). I wanted to create something similar without seeing his source before hand.*

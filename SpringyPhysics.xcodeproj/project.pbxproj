@@ -13,6 +13,11 @@
 		2BC2F41B153B280100BB5A3F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2BC2F419153B280100BB5A3F /* InfoPlist.strings */; };
 		2BC2F41D153B280100BB5A3F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC2F41C153B280100BB5A3F /* main.m */; };
 		2BC2F421153B280100BB5A3F /* SPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC2F420153B280100BB5A3F /* SPAppDelegate.m */; };
+		2BC2F429153B292900BB5A3F /* SPMeshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC2F428153B292900BB5A3F /* SPMeshView.m */; };
+		2BC2F42E153B2AE400BB5A3F /* SPNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC2F42D153B2AE400BB5A3F /* SPNode.m */; };
+		2BC2F431153B3FAD00BB5A3F /* SPSpring.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC2F430153B3FAD00BB5A3F /* SPSpring.m */; };
+		2BC2F435153B41DC00BB5A3F /* SPVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC2F434153B41DC00BB5A3F /* SPVector.m */; };
+		2BC2F43B153BA01700BB5A3F /* SPDragNodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BC2F43A153BA01700BB5A3F /* SPDragNodeInfo.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,12 +25,22 @@
 		2BC2F410153B280000BB5A3F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2BC2F412153B280100BB5A3F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		2BC2F414153B280100BB5A3F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		2BC2F418153B280100BB5A3F /* SpringyPhysics-Info.plist */ = {isa = PBXFileReference; path = "SpringyPhysics-Info.plist"; sourceTree = "<group>"; };
+		2BC2F418153B280100BB5A3F /* SpringyPhysics-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SpringyPhysics-Info.plist"; sourceTree = "<group>"; };
 		2BC2F41A153B280100BB5A3F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2BC2F41C153B280100BB5A3F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		2BC2F41E153B280100BB5A3F /* SpringyPhysics-Prefix.pch */ = {isa = PBXFileReference; path = "SpringyPhysics-Prefix.pch"; sourceTree = "<group>"; };
-		2BC2F41F153B280100BB5A3F /* SPAppDelegate.h */ = {isa = PBXFileReference; path = SPAppDelegate.h; sourceTree = "<group>"; };
+		2BC2F41E153B280100BB5A3F /* SpringyPhysics-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SpringyPhysics-Prefix.pch"; sourceTree = "<group>"; };
+		2BC2F41F153B280100BB5A3F /* SPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPAppDelegate.h; sourceTree = "<group>"; };
 		2BC2F420153B280100BB5A3F /* SPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPAppDelegate.m; sourceTree = "<group>"; };
+		2BC2F427153B292900BB5A3F /* SPMeshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPMeshView.h; sourceTree = "<group>"; };
+		2BC2F428153B292900BB5A3F /* SPMeshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPMeshView.m; sourceTree = "<group>"; };
+		2BC2F42C153B2AE400BB5A3F /* SPNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPNode.h; sourceTree = "<group>"; };
+		2BC2F42D153B2AE400BB5A3F /* SPNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPNode.m; sourceTree = "<group>"; };
+		2BC2F42F153B3FAD00BB5A3F /* SPSpring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPSpring.h; sourceTree = "<group>"; };
+		2BC2F430153B3FAD00BB5A3F /* SPSpring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPSpring.m; sourceTree = "<group>"; };
+		2BC2F433153B41DC00BB5A3F /* SPVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPVector.h; sourceTree = "<group>"; };
+		2BC2F434153B41DC00BB5A3F /* SPVector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPVector.m; sourceTree = "<group>"; };
+		2BC2F439153BA01700BB5A3F /* SPDragNodeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDragNodeInfo.h; sourceTree = "<group>"; };
+		2BC2F43A153BA01700BB5A3F /* SPDragNodeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDragNodeInfo.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +89,7 @@
 			children = (
 				2BC2F41F153B280100BB5A3F /* SPAppDelegate.h */,
 				2BC2F420153B280100BB5A3F /* SPAppDelegate.m */,
+				2BC2F42A153B298200BB5A3F /* Physics Mesh */,
 				2BC2F417153B280100BB5A3F /* Supporting Files */,
 			);
 			path = SpringyPhysics;
@@ -88,6 +104,39 @@
 				2BC2F41E153B280100BB5A3F /* SpringyPhysics-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2BC2F42A153B298200BB5A3F /* Physics Mesh */ = {
+			isa = PBXGroup;
+			children = (
+				2BC2F427153B292900BB5A3F /* SPMeshView.h */,
+				2BC2F428153B292900BB5A3F /* SPMeshView.m */,
+				2BC2F432153B413600BB5A3F /* Helpers */,
+				2BC2F42B153B298900BB5A3F /* Objects */,
+			);
+			name = "Physics Mesh";
+			sourceTree = "<group>";
+		};
+		2BC2F42B153B298900BB5A3F /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				2BC2F42C153B2AE400BB5A3F /* SPNode.h */,
+				2BC2F42D153B2AE400BB5A3F /* SPNode.m */,
+				2BC2F42F153B3FAD00BB5A3F /* SPSpring.h */,
+				2BC2F430153B3FAD00BB5A3F /* SPSpring.m */,
+			);
+			name = Objects;
+			sourceTree = "<group>";
+		};
+		2BC2F432153B413600BB5A3F /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				2BC2F433153B41DC00BB5A3F /* SPVector.h */,
+				2BC2F434153B41DC00BB5A3F /* SPVector.m */,
+				2BC2F439153BA01700BB5A3F /* SPDragNodeInfo.h */,
+				2BC2F43A153BA01700BB5A3F /* SPDragNodeInfo.m */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -155,6 +204,11 @@
 			files = (
 				2BC2F41D153B280100BB5A3F /* main.m in Sources */,
 				2BC2F421153B280100BB5A3F /* SPAppDelegate.m in Sources */,
+				2BC2F429153B292900BB5A3F /* SPMeshView.m in Sources */,
+				2BC2F42E153B2AE400BB5A3F /* SPNode.m in Sources */,
+				2BC2F431153B3FAD00BB5A3F /* SPSpring.m in Sources */,
+				2BC2F435153B41DC00BB5A3F /* SPVector.m in Sources */,
+				2BC2F43B153BA01700BB5A3F /* SPDragNodeInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

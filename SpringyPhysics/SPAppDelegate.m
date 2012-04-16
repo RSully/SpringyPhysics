@@ -8,15 +8,26 @@
 
 #import "SPAppDelegate.h"
 
-@implementation SPAppDelegate
+@implementation SPAppDelegate {
+    SPMeshView *meshView;
+}
 
 @synthesize window = _window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.backgroundColor = [UIColor lightGrayColor];
+    
+    
+    UIViewController *mainViewController = [[UIViewController alloc] init];
+    meshView = [[SPMeshView alloc] initWithFrame:mainViewController.view.bounds];
+    [mainViewController.view addSubview:meshView];    
+    [meshView startAnimation];
+    
+    self.window.rootViewController = mainViewController;
+    
+    
     [self.window makeKeyAndVisible];
     return YES;
 }

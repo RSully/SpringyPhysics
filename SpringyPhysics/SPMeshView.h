@@ -26,7 +26,7 @@
     NSDate *lastAnimation;
     
     SPNode *_tripleTapNode;
-    NSMutableDictionary *_dragNodes;
+    SPNode *_dragNode;
 }
 
 -(SPNode*)addNodeToPoint:(CGPoint)pt;

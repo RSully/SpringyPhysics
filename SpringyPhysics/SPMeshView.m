@@ -18,8 +18,7 @@
         nodes = [NSMutableArray new];
         springs = [NSMutableArray new];
         
-        _dragNodes = [NSMutableDictionary new];
-        [self setMultipleTouchEnabled:YES];
+        [self setMultipleTouchEnabled:NO];
         
         UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
         UITapGestureRecognizer *tripleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tripleTap:)];
@@ -70,9 +69,7 @@
         node.velocity = [node.velocity vectorByAddingVector:[SPVector vectorWithX:accel.x*time y:accel.y*time]];
     }
     for (SPNode *node in nodes) {
-        if ([[[_dragNodes allValues] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-            return [(SPDragNodeInfo*)evaluatedObject node] == node;
-        }]] count] > 0) continue;
+        if (node == _dragNode) continue;
         
         node.position = CGPointMake(node.position.x+(node.velocity.x*time), node.position.y+(node.velocity.y*time));
         node.position = CGPointMake(MIN(self.bounds.size.width-kNodeRadius, node.position.x), MIN(self.bounds.size.height-kNodeRadius, node.position.y));
@@ -224,43 +221,27 @@
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [[touches allObjects] objectAtIndex:0];
-    SPNode *node =  [self getNodeAtPoint:[touch locationInView:self]];
-    if (!node) return;
-    node.velocity = [SPVector vectorWithX:0.0 y:0.0];
-    
-    for (NSString *key in [_dragNodes allKeys]) {
-        SPDragNodeInfo *info = [_dragNodes objectForKey:key];
-        if (info.node == node) [_dragNodes removeObjectForKey:key];
-    }
-    
-    [_dragNodes setObject:[SPDragNodeInfo infoWithNode:node] forKey:[self infoKeyForObject:touch]];
+    _dragNode =  [self getNodeAtPoint:[touch locationInView:self]];
+    if (!_dragNode) return;
+    _dragNode.velocity = [SPVector vectorWithX:0.0 y:0.0];
 }
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *touch = [[touches allObjects] objectAtIndex:0];
-    [_dragNodes removeObjectForKey:[self infoKeyForObject:touch]];
+    _dragNode = nil;
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *touch = [[touches allObjects] objectAtIndex:0];
-    [_dragNodes removeObjectForKey:[self infoKeyForObject:touch]];
+    _dragNode = nil;
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [[touches allObjects] objectAtIndex:0];
-    SPDragNodeInfo *nodeInfo = [_dragNodes objectForKey:[self infoKeyForObject:touch]];
-    if (!nodeInfo) return;
     
-    SPNode *node = nodeInfo.node;
-//    NSTimeInterval time = [[NSDate date] timeIntervalSinceDate:nodeInfo.moved];
+    SPNode *node = _dragNode;
     
     if (time > 0) {
-//        CGPoint oldPosition = node.position;
         node.position = [touch locationInView:self];
-//        node.velocity = [SPVector vectorWithX:(node.position.x - oldPosition.x)/time 
-//                                            y:(node.position.y - oldPosition.y)/time];
     }
-    nodeInfo.moved = [NSDate date];
 }
 
 @end

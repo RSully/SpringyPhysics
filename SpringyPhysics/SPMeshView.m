@@ -48,7 +48,7 @@
         [pan setMaximumNumberOfTouches:1];
         [self addGestureRecognizer:pan];
         
-        [self performSelector:@selector(quintTap:) withObject:quintTap afterDelay:0.5];
+//        [self performSelector:@selector(quintTap:) withObject:quintTap afterDelay:0.5];
         
         displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(animate:)];
         displayLink.paused = YES;

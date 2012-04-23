@@ -26,6 +26,11 @@
     return self;
 }
 
+-(void)dealloc {
+    [node1 removeSpring:self];
+    [node2 removeSpring:self];
+}
+
 
 -(CGFloat)length {
     return sqrt(pow(node2.position.x-node1.position.x, 2) + 

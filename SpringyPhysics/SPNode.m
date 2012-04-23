@@ -32,7 +32,6 @@
 
 -(SPVector*)netForce {
     SPVector *force = [SPVector vectorWithX:0.0 y:0.0];
-    //NSArray *springs = [mesh springsForNode:self];
     for (SPSpring *spring in springs) {
         force = [force vectorByAddingVector:[spring forceForNode:self]];
         force = [force vectorByAddingVector:[self dampingForce]];

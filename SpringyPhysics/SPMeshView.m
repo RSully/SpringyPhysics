@@ -53,10 +53,16 @@
         displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(animate:)];
         displayLink.paused = YES;
         displayLink.frameInterval = 1.0;
-        [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+        // Should this be NSDefaultRunLoopMode ?
+        [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     }
     return self;
 }
+
+-(void)dealloc {
+    [displayLink invalidate];
+}
+
 
 -(void)startAnimation {
     displayLink.paused = NO;

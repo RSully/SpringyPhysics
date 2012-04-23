@@ -47,23 +47,28 @@
         UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panMovement:)];
         [pan setMaximumNumberOfTouches:1];
         [self addGestureRecognizer:pan];
+        
+        [self performSelector:@selector(quintTap:) withObject:quintTap afterDelay:0.5];
+        
+        displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(animate:)];
+        displayLink.paused = YES;
+        displayLink.frameInterval = 1.0;
+        [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
     }
     return self;
 }
 
 -(void)startAnimation {
-    if (animationTimer) return;
-    animationTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/kFPS) target:self selector:@selector(animate:) userInfo:nil repeats:YES];
+    displayLink.paused = NO;
 }
 
 -(void)stopAnimation {
-    [animationTimer invalidate];
-    animationTimer = nil;
+    displayLink.paused = YES;
 }
 
 -(void)animate:(id)sender {
-//    CGFloat time = 1.0/kFPS;
     CGFloat time = [[NSDate date] timeIntervalSinceDate:lastAnimation];
+    NSDate *tt1 = [NSDate date];
     
     for (SPNode *node in nodes) {
         SPVector *force = [node netForce];
@@ -78,6 +83,8 @@
         //node.position = CGPointMake(MIN(self.bounds.size.width-kNodeRadius, node.position.x), MIN(self.bounds.size.height-kNodeRadius, node.position.y));
         //node.position = CGPointMake(MAX(self.bounds.origin.x+kNodeRadius, node.position.x), MAX(self.bounds.origin.y+kNodeRadius, node.position.y));
     }
+    NSTimeInterval tt2 = [[NSDate date] timeIntervalSinceDate:tt1];
+    NSLog(@"Took %f to calculate", tt2);
     
     [self setNeedsDisplay];
     lastAnimation = [NSDate date];
@@ -117,7 +124,7 @@
                       node.position.y-kNodeRadius, 
                       kNodeRadius*2, kNodeRadius*2);
 }
-            
+
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
@@ -130,8 +137,9 @@
     CGContextSetLineWidth(ctx, 5.0);
     for (int i = 0; i < [springs count]; i++) {
         SPSpring *spring = [springs objectAtIndex:i];
-        SPNode *node1 = [[spring nodes] objectAtIndex:0];
-        SPNode *node2 = [[spring nodes] objectAtIndex:1];
+        NSArray *sNodes = [[spring nodes] allObjects];
+        SPNode *node1 = [sNodes objectAtIndex:0];
+        SPNode *node2 = [sNodes objectAtIndex:1];
         
         CGPoint points[2] = {node1.position, node2.position};
         CGContextStrokeLineSegments(ctx, points, 2);
@@ -229,7 +237,7 @@
     
     if (pan.state == UIGestureRecognizerStateBegan) {
         _dragNode = [self getNodeAtPoint:panPoint];
-        NSLog(@"%@ / %@", _dragNode, NSStringFromCGPoint(panPoint));
+        //NSLog(@"%@ / %@", _dragNode, NSStringFromCGPoint(panPoint));
     } else if (pan.state == UIGestureRecognizerStateChanged) {
         //lastTouchPoint = panPoint;
         //lastTouchTime = [[NSDate date] timeIntervalSince1970];

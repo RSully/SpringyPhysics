@@ -19,6 +19,8 @@
         rate = r;
         node1 = n1;
         node2 = n2;
+        [node1 addSpring:self];
+        [node2 addSpring:self];
         initialLength = [self length];
     }
     return self;
@@ -34,8 +36,8 @@
     return rate;
 }
 
--(NSArray*)nodes {
-    return [NSArray arrayWithObjects:node1, node2, nil];
+-(NSSet *)nodes {
+    return [NSSet setWithObjects:node1, node2, nil];
 }
 
 -(SPVector*)forceForNode:(SPNode*)node {

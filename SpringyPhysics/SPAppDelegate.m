@@ -22,7 +22,7 @@
     
     UIViewController *mainViewController = [[UIViewController alloc] init];
     meshView = [[SPMeshView alloc] initWithFrame:mainViewController.view.bounds];
-    [mainViewController.view addSubview:meshView];    
+    [mainViewController.view addSubview:meshView];
     [meshView startAnimation];
     
     self.window.rootViewController = mainViewController;

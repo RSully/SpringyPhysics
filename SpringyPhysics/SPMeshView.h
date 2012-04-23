@@ -10,6 +10,7 @@
 #import "SPNode.h"
 #import "SPSpring.h"
 #import "SPDragNodeInfo.h"
+#import <QuartzCore/QuartzCore.h>
 
 #define kNodeRadius 32.0
 #define kSpringRate 1.6
@@ -22,6 +23,7 @@
     NSMutableArray *nodes;
     NSMutableArray *springs;
     
+    CADisplayLink *displayLink;
     NSTimer *animationTimer;
     NSDate *lastAnimation;
     

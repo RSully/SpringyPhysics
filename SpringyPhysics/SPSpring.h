@@ -23,7 +23,7 @@
 
 -(CGFloat)length;
 -(CGFloat)rate;
--(NSArray*)nodes;
+-(NSSet *)nodes;
 -(SPVector*)forceForNode:(SPNode*)node;
 -(SPVector*)springForceForNode:(SPNode*)node;
 

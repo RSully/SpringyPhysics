@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SPMeshView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface SPAppDelegate : UIResponder <UIApplicationDelegate>
 

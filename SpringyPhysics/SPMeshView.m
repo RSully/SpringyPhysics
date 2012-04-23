@@ -68,7 +68,7 @@
 
 -(void)animate:(id)sender {
     CGFloat time = [[NSDate date] timeIntervalSinceDate:lastAnimation];
-    NSDate *tt1 = [NSDate date];
+//    NSDate *tt1 = [NSDate date];
     
     for (SPNode *node in nodes) {
         SPVector *force = [node netForce];
@@ -83,8 +83,8 @@
         //node.position = CGPointMake(MIN(self.bounds.size.width-kNodeRadius, node.position.x), MIN(self.bounds.size.height-kNodeRadius, node.position.y));
         //node.position = CGPointMake(MAX(self.bounds.origin.x+kNodeRadius, node.position.x), MAX(self.bounds.origin.y+kNodeRadius, node.position.y));
     }
-    NSTimeInterval tt2 = [[NSDate date] timeIntervalSinceDate:tt1];
-    NSLog(@"Took %f to calculate", tt2);
+//    NSTimeInterval tt2 = [[NSDate date] timeIntervalSinceDate:tt1];
+//    NSLog(@"Took %f to calculate", tt2);
     
     [self setNeedsDisplay];
     lastAnimation = [NSDate date];

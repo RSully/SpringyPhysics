@@ -44,7 +44,9 @@
         [quintTap setNumberOfTouchesRequired:5];
         [self addGestureRecognizer:quintTap];
         
-        //[self performSelector:@selector(quintTap:) withObject:nil afterDelay:0.1];
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panMovement:)];
+        [pan setMaximumNumberOfTouches:1];
+        [self addGestureRecognizer:pan];
     }
     return self;
 }
@@ -72,8 +74,9 @@
         if (node == _dragNode) continue;
         
         node.position = CGPointMake(node.position.x+(node.velocity.x*time), node.position.y+(node.velocity.y*time));
-        node.position = CGPointMake(MIN(self.bounds.size.width-kNodeRadius, node.position.x), MIN(self.bounds.size.height-kNodeRadius, node.position.y));
-        node.position = CGPointMake(MAX(self.bounds.origin.x+kNodeRadius, node.position.x), MAX(self.bounds.origin.y+kNodeRadius, node.position.y));
+        // This is supposed to bound the nodes to the screen
+        //node.position = CGPointMake(MIN(self.bounds.size.width-kNodeRadius, node.position.x), MIN(self.bounds.size.height-kNodeRadius, node.position.y));
+        //node.position = CGPointMake(MAX(self.bounds.origin.x+kNodeRadius, node.position.x), MAX(self.bounds.origin.y+kNodeRadius, node.position.y));
     }
     
     [self setNeedsDisplay];
@@ -215,33 +218,68 @@
 }
 
 
--(NSString*)infoKeyForObject:(id)obj {
-    return [NSString stringWithFormat:@"%p", obj];
-}
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *touch = [[touches allObjects] objectAtIndex:0];
-    _dragNode =  [self getNodeAtPoint:[touch locationInView:self]];
-    if (!_dragNode) return;
-    _dragNode.velocity = [SPVector vectorWithX:0.0 y:0.0];
-}
-
--(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    _dragNode = nil;
-}
-
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    _dragNode = nil;
-}
-
--(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    UITouch *touch = [[touches allObjects] objectAtIndex:0];
+-(void)panMovement:(UIPanGestureRecognizer *)pan {
+    CGPoint panPoint = [pan locationInView:self];
     
-    SPNode *node = _dragNode;
+    if (pan.state == UIGestureRecognizerStateCancelled || pan.state == UIGestureRecognizerStateFailed) {
+        _dragNode = nil;
+        return;
+    }
     
-    if (time > 0) {
-        node.position = [touch locationInView:self];
+    if (pan.state == UIGestureRecognizerStateBegan) {
+        _dragNode = [self getNodeAtPoint:panPoint];
+        NSLog(@"%@ / %@", _dragNode, NSStringFromCGPoint(panPoint));
+    } else if (pan.state == UIGestureRecognizerStateChanged) {
+        //lastTouchPoint = panPoint;
+        //lastTouchTime = [[NSDate date] timeIntervalSince1970];
+        
+        _dragNode.position = panPoint;
+    } else if (pan.state == UIGestureRecognizerStateEnded) {
+        CGPoint vel = [pan velocityInView:self];
+        //NSTimeInterval timeDiff = [[NSDate date] timeIntervalSince1970] - lastTouchTime;
+        
+        _dragNode.velocity = [SPVector vectorWithX:vel.x y:vel.y];
+        
+        _dragNode = nil;
     }
 }
+
+//-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+//    UITouch *touch = [touches anyObject];
+//    
+//    _dragNode =  [self getNodeAtPoint:[touch locationInView:self]];
+//    if (!_dragNode) return;
+//    
+//    _dragNode.velocity = [SPVector vectorWithX:0.0 y:0.0];
+//}
+//
+//-(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+//    _dragNode = nil;
+//}
+//
+//-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+//    UITouch *touch = [touches anyObject];
+//    
+//    NSTimeInterval timeDiff = touch.timestamp - lastTouchTime;
+//    CGPoint loc = [touch locationInView:self];
+//    CGPoint pLoc = lastTouchPoint;
+//    
+//    _dragNode.velocity = [SPVector vectorWithX:(loc.x-pLoc.x)/timeDiff y:(loc.y-pLoc.y)/timeDiff];
+//    
+//    _dragNode = nil;
+//    NSLog(@"-touchesEnded");
+//}
+//
+//-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+//    UITouch *touch = [touches anyObject];
+//    SPNode *node = _dragNode;
+//    
+//    if (time > 0) {
+//        node.position = [touch locationInView:self];
+//    }
+//    lastTouchTime = touch.timestamp;
+//    lastTouchPoint = node.position;
+//}
 
 @end

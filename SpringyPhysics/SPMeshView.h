@@ -13,7 +13,7 @@
 
 #define kNodeRadius 32.0
 #define kSpringRate 1.6
-#define kSpringDamp 0.1
+#define kSpringDamp 0.2
 #define kNodeMass 1.2
 #define kFPS 35.0
 
@@ -24,6 +24,9 @@
     
     NSTimer *animationTimer;
     NSDate *lastAnimation;
+    
+    NSTimeInterval lastTouchTime;
+    CGPoint lastTouchPoint;
     
     SPNode *_tripleTapNode;
     SPNode *_dragNode;

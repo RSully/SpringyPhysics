@@ -17,16 +17,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.backgroundColor = [UIColor lightGrayColor];
-    
     
     UIViewController *mainViewController = [[UIViewController alloc] init];
-    meshView = [[SPMeshView alloc] initWithFrame:mainViewController.view.bounds];
+    meshView = [[SPDotMeshView alloc] initWithFrame:mainViewController.view.bounds];
     [mainViewController.view addSubview:meshView];
     [meshView startAnimation];
     
     self.window.rootViewController = mainViewController;
-    
     
     [self.window makeKeyAndVisible];
     return YES;

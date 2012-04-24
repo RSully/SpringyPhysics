@@ -27,16 +27,12 @@
     NSTimer *animationTimer;
     NSDate *lastAnimation;
     
-    NSTimeInterval lastTouchTime;
-    CGPoint lastTouchPoint;
-    
-    SPNode *_tripleTapNode;
     SPNode *_dragNode;
 }
 
 -(SPNode*)addNodeToPoint:(CGPoint)pt;
+-(SPNode*)getNodeAtPoint:(CGPoint)pt;
 -(NSArray*)springsForNode:(SPNode*)node;
-
 -(CGRect)rectForNode:(SPNode*)node;
 
 -(void)startAnimation;

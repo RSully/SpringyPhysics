@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2BA7EA1315475585003091EE /* SPDotMeshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BA7EA1215475585003091EE /* SPDotMeshView.m */; };
 		2BC2F411153B280100BB5A3F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC2F410153B280000BB5A3F /* UIKit.framework */; };
 		2BC2F413153B280100BB5A3F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC2F412153B280100BB5A3F /* Foundation.framework */; };
 		2BC2F415153B280100BB5A3F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BC2F414153B280100BB5A3F /* CoreGraphics.framework */; };
@@ -22,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2BA7EA1115475585003091EE /* SPDotMeshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDotMeshView.h; sourceTree = "<group>"; };
+		2BA7EA1215475585003091EE /* SPDotMeshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDotMeshView.m; sourceTree = "<group>"; };
 		2BC2F40C153B280000BB5A3F /* SpringyPhysics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpringyPhysics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BC2F410153B280000BB5A3F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2BC2F412153B280100BB5A3F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -60,6 +63,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2BA7EA0F1547555D003091EE /* Meshes */ = {
+			isa = PBXGroup;
+			children = (
+				2BA7EA1115475585003091EE /* SPDotMeshView.h */,
+				2BA7EA1215475585003091EE /* SPDotMeshView.m */,
+			);
+			name = Meshes;
+			sourceTree = "<group>";
+		};
 		2BC2F401153B280000BB5A3F = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +127,7 @@
 			children = (
 				2BC2F427153B292900BB5A3F /* SPMeshView.h */,
 				2BC2F428153B292900BB5A3F /* SPMeshView.m */,
+				2BA7EA0F1547555D003091EE /* Meshes */,
 				2BC2F432153B413600BB5A3F /* Helpers */,
 				2BC2F42B153B298900BB5A3F /* Objects */,
 			);
@@ -213,6 +226,7 @@
 				2BC2F431153B3FAD00BB5A3F /* SPSpring.m in Sources */,
 				2BC2F435153B41DC00BB5A3F /* SPVector.m in Sources */,
 				2BC2F43B153BA01700BB5A3F /* SPDragNodeInfo.m in Sources */,
+				2BA7EA1315475585003091EE /* SPDotMeshView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

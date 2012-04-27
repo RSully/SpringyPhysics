@@ -7,55 +7,52 @@
 //
 
 #import "SPSpring.h"
+#import "SPNode.h"
 
-@implementation SPSpring
-
-+(id)springWithRate:(CGFloat)r node:(SPNode*)n1 node:(SPNode*)n2 {
-    return [[self alloc] initWithRate:r node:n1 node:n2];
-}
-
--(id)initWithRate:(CGFloat)r node:(SPNode*)n1 node:(SPNode*)n2 {
-    if ((self = [super init])) {
-        rate = r;
-        node1 = n1;
-        node2 = n2;
-        [node1 addSpring:self];
-        [node2 addSpring:self];
-        initialLength = [self length];
-    }
-    return self;
-}
-
--(void)dealloc {
-    [node1 removeSpring:self];
-    [node2 removeSpring:self];
-}
+SPVector SPSpringGetSpringForceForNode(SPSpringRef spring, SPNodeRef node);
 
 
--(CGFloat)length {
-    return sqrt(pow(node2.position.x-node1.position.x, 2) + 
-                pow(node2.position.y-node1.position.y, 2));
-}
-
--(CGFloat)rate {
-    return rate;
-}
-
--(NSSet *)nodes {
-    return [NSSet setWithObjects:node1, node2, nil];
-}
-
--(SPVector*)forceForNode:(SPNode*)node {
-    return [self springForceForNode:node];
-}
--(SPVector*)springForceForNode:(SPNode*)node {
-    CGFloat flip = (node == node1) ? -1.0 : 1.0;
+SPSpringRef SPSpringCreate(float rate, SPNodeRef node1, SPNodeRef node2) {
+    SPSpringRef spring = (SPSpringRef)malloc(sizeof(struct _SPSpring));
+    spring->rate = rate;
     
-    CGFloat deltaX = node2.position.x - node1.position.x;
-    CGFloat deltaY = node2.position.y - node1.position.y;
-    CGFloat deltaLength = [self length] - initialLength;
-    return [SPVector vectorWithMagnitude:(flip * -1.0 * rate * deltaLength) 
-                                   angle:atan2(deltaY, deltaX)];
+    spring->node1 = SPNodeRetain(node1);
+    spring->node2 = SPNodeRetain(node2);
+    spring->initalLength = SPSpringGetLength(spring);
+    
+    spring->retainCount = 1;
+    return spring;
 }
 
-@end
+SPSpringRef SPSpringRetain(SPSpringRef spring) {
+    spring->retainCount++;
+    return spring;
+}
+
+void SPSpringRelease(SPSpringRef spring) {
+    spring->retainCount--;
+    if (spring->retainCount <= 0) {
+        SPNodeRelease(spring->node1);
+        SPNodeRelease(spring->node2);
+        free(spring);
+    }
+}
+
+
+SPVector SPSpringGetForceForNode(SPSpringRef spring, SPNodeRef node) {
+    return SPSpringGetSpringForceForNode(spring, node);
+}
+
+SPVector SPSpringGetSpringForceForNode(SPSpringRef spring, SPNodeRef node) {
+    float flip = (node == spring->node1) ? -1.0 : 1.0;
+    float dX = spring->node2->position.x - spring->node1->position.x;
+    float dY = spring->node2->position.y - spring->node1->position.y;
+    float dL = SPSpringGetLength(spring) - spring->initalLength;
+    return SPVectorMakePolar(atan2(dY, dX), (flip * -1.0 * spring->rate * dL));
+}
+
+float SPSpringGetLength(SPSpringRef spring) {
+    return sqrt(pow(spring->node2->position.x - spring->node1->position.x, 2) +
+                pow(spring->node2->position.y - spring->node1->position.y, 2));
+}
+

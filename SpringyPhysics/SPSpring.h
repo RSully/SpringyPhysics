@@ -7,24 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SPNode.h"
 #import "SPVector.h"
+#import "SPMeshStructures.h"
 
-@interface SPSpring : NSObject {
-    CGFloat rate;
-    CGFloat initialLength;
-    
-    SPNode *node1;
-    SPNode *node2;
-}
 
-+(id)springWithRate:(CGFloat)r node:(SPNode*)n1 node:(SPNode*)n2;
--(id)initWithRate:(CGFloat)r node:(SPNode*)n1 node:(SPNode*)n2;
+SPSpringRef SPSpringCreate(float rate, SPNodeRef node1, SPNodeRef node2);
+SPSpringRef SPSpringRetain(SPSpringRef spring);
+void SPSpringRelease(SPSpringRef spring);
 
--(CGFloat)length;
--(CGFloat)rate;
--(NSSet *)nodes;
--(SPVector*)forceForNode:(SPNode*)node;
--(SPVector*)springForceForNode:(SPNode*)node;
+SPVector SPSpringGetForceForNode(SPSpringRef spring, SPNodeRef node);
+float SPSpringGetLength(SPSpringRef spring);
 
-@end

@@ -8,27 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SPVector.h"
-
-@class SPMeshView;
-typedef struct _SPSpring *SPSpringRef;
-
-struct _SPNode {
-    int retainCount;
-    
-    __unsafe_unretained SPMeshView *mesh;
-    SPSpringRef *springs;
-    int numSprings;
-    int numSpringsAllocd;
-    
-    CGFloat damp;
-    CGFloat mass;
-    BOOL lockPosition;
-    
-    CGPoint position;
-    SPVector velocity;
-};
-
-typedef struct _SPNode * SPNodeRef;
+#import "SPMeshStructures.h"
 
 
 SPNodeRef SPNodeCreate(CGFloat damp, CGFloat mass, SPMeshView *mesh);

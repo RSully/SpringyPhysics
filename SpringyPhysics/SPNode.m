@@ -39,6 +39,9 @@ void SPNodeRelease(SPNodeRef node) {
     node->retainCount--;
     
     if (node->retainCount <= 0) {
+        for (int i = 0; i < node->numSprings; i++) {
+            SPSpringRelease(node->springs[i]);
+        }
         free(node->springs);
         free(node);
     }
@@ -47,9 +50,9 @@ void SPNodeRelease(SPNodeRef node) {
 
 SPVector SPNodeGetNetForce(SPNodeRef node) {
     SPVector force = SPVectorMake(0.0, 0.0);
-    for (int i = 0; i < CFArrayGetCount(node->springs); i++) {
-        SPSpringRef spring = CFArrayGetValueAtIndex(node->springs, i);
-        force = SPVectorSum(force, SPSpringGetForceForNode(node));
+    for (int i = 0; i < node->numSprings; i++) {
+        SPSpringRef spring = node->springs[i];
+        force = SPVectorSum(force, SPSpringGetForceForNode(spring, node));
         force = SPVectorSum(force, SPNodeGetDampingForce(node));
     }
     return force;

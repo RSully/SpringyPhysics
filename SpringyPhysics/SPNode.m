@@ -10,58 +10,53 @@
 #import "SPSpring.h"
 #import "SPMeshView.h"
 
-@implementation SPNode
 
-@synthesize lockPosition, position, mass, velocity, mesh, springs;
-
-+(SPNode*)nodeWithDamp:(CGFloat)dp point:(CGPoint)pt mass:(CGFloat)m {
-    return [[self alloc] initWithDamp:dp point:pt mass:m];
+SPNodeRef SPNodeCreate(CGFloat damp, CGFloat mass, SPMeshView *mesh) {
+    SPNodeRef node = (SPNodeRef)malloc(sizeof(struct _SPNode));
+    node->damp = damp;
+    node->mass = mass;
+    node->mesh = mesh;
+    node->springs = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
+    node->velocity = SPVectorMake(0, 0);
+    node->position = CGPointMake(0, 0);
+    node->lockPosition = NO;
+    node->retainCount = 1;
+    return node;
 }
 
--(id)initWithDamp:(CGFloat)dp point:(CGPoint)pt mass:(CGFloat)m {
-    if ((self = [super init])) {
-        springs = [NSMutableArray new];
-        position = pt;
-        mass = m;
-        lockPosition = NO;
-        damp = dp;
-        velocity = [SPVector vectorWithX:0.0 y:0.0];
+void SPNodeRelease(SPNodeRef node) {
+    node->retainCount--;
+    if (node->retainCount <= 0) {
+        CFRelease(node->springs);
+        free(node);
     }
-    return self;
 }
 
--(SPVector*)netForce {
-    SPVector *force = [SPVector vectorWithX:0.0 y:0.0];
-    for (SPSpring *spring in springs) {
-        force = [force vectorByAddingVector:[spring forceForNode:self]];
-        force = [force vectorByAddingVector:[self dampingForce]];
+SPVector SPNodeGetNetForce(SPNodeRef node) {
+    SPVector force = SPVectorMake(0.0, 0.0);
+    for (int i = 0; i < CFArrayGetCount(node->springs); i++) {
+        SPSpringRef spring = CFArrayGetValueAtIndex(node->springs, i);
+        force = SPVectorSum(force, SPSpringGetForceForNode(node));
+        force = SPVectorSum(force, SPNodeGetDampingForce(node));
     }
     return force;
 }
 
--(SPVector*)dampingForce {
-    CGFloat dampX = -1 * damp * velocity.x;
-    CGFloat dampY = -1 * damp * velocity.y;
-    return [SPVector vectorWithX:dampX y:dampY];
+SPVector SPNodeGetDampingForce(SPNodeRef node) {
+    return SPVectorMake(-1 * node->damp * node->velocity.x, -1 * node->damp * node->velocity.y);
 }
 
-
--(SPVector*)velocity {
-    return lockPosition ? [SPVector vectorWithX:0.0 y:0.0] : velocity;
+SPVector SPNodeGetVelocity(SPNodeRef node) {
+    return node->lockPosition ? SPVectorMake(0, 0) : node->velocity;
 }
 
-
-
--(void)addSpring:(SPSpring *)spr {
-    if ([spr isKindOfClass:[SPSpring class]] && ![springs containsObject:spr]) {
-        [springs addObject:spr];
+void SPNodeAddSpring(SPNodeRef node, SPSpringRef spring) {
+    if (CFArrayContainsValue(node->springs, 0, spring)) return;
+    CFArrayAppendValue(node->springs, spring);
+}
+void SPNodeRemoveSpring(SPNodeRef node, SPSpringRef spring) {
+    while ((CFIndex ind = CFArrayGetFirstIndexOfValue(node->springs, 0, spring))) {
+        CFArrayRemoveValueAtIndex(node->springs, ind);
     }
 }
 
--(void)removeSpring:(SPSpring *)spr {
-    if ([springs containsObject:spr]) {
-        [springs removeObject:spr];
-    }
-}
-
-@end

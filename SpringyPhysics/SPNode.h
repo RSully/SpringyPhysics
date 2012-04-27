@@ -9,33 +9,46 @@
 #import <Foundation/Foundation.h>
 #import "SPVector.h"
 
-@class SPMeshView, SPSpring;
+@class SPMeshView;
 
-@interface SPNode : NSObject {
-    __weak SPMeshView *mesh;
-    NSMutableArray *springs;
+
+struct _SPNode {
+    int retainCount;
+    
+    __unsafe_unretained SPMeshView *mesh;
+    CFArrayRef springs;
     
     CGFloat damp;
     CGFloat mass;
     BOOL lockPosition;
     
     CGPoint position;
-    SPVector *velocity;
-}
+    SPVector velocity;
+};
 
-+(SPNode*)nodeWithDamp:(CGFloat)dp point:(CGPoint)pt mass:(CGFloat)m;
--(id)initWithDamp:(CGFloat)dp point:(CGPoint)pt mass:(CGFloat)m;
+typedef struct _SPNode * SPNodeRef;
 
--(SPVector*)netForce;
 
--(void)addSpring:(SPSpring *)spr;
--(void)removeSpring:(SPSpring *)spr;
+SPNodeRef SPNodeCreate(CGFloat damp, CGFloat mass, SPMeshView *mesh);
+void SPNodeRelease(SPNodeRef node);
 
-@property (assign) BOOL lockPosition;
-@property (assign) CGPoint position;
-@property (assign) CGFloat mass;
-@property (nonatomic, strong) SPVector *velocity;
-@property (weak) SPMeshView *mesh;
-@property (readonly) NSMutableArray *springs;
+SPVector SPNodeGetNetForce(SPNodeRef node);
 
-@end
+void SPNodeAddSpring(SPNodeRef node, SPSpringRef spring);
+void SPNodeRemoveSpring(SPNodeRef node, SPSpringRef spring);
+
+//SPNodeRef SPNodeCreate (CGFloat damp, CGPoint pt, CGFloat m) {
+//    SPNodeRef node = (SPNodeRef)malloc(sizeof(struct _SPNode));
+//    node->field = value;
+//    ...
+//    node->retainCount = 1;
+//    return node;
+//}
+//and then release would just be like
+//void SPNodeRelease(SPNodeRef node) {
+//    node->retainCount --;
+//    if (node->retainCount = 0) {
+//        // release any retained resources, etc.
+//        free(node);
+//    }
+

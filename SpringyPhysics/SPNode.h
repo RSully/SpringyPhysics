@@ -10,7 +10,7 @@
 #import "SPVector.h"
 
 @class SPMeshView;
-
+typedef struct _SPSpring *SPSpringRef;
 
 struct _SPNode {
     int retainCount;
@@ -32,9 +32,13 @@ typedef struct _SPNode * SPNodeRef;
 
 
 SPNodeRef SPNodeCreate(CGFloat damp, CGFloat mass, SPMeshView *mesh);
+SPNodeRef SPNodeRetain(SPNodeRef node);
 void SPNodeRelease(SPNodeRef node);
 
 SPVector SPNodeGetNetForce(SPNodeRef node);
+SPVector SPNodeGetDampingForce(SPNodeRef node);
+
+SPVector SPNodeGetVelocity(SPNodeRef node);
 
 void SPNodeAddSpring(SPNodeRef node, SPSpringRef spring);
 void SPNodeRemoveSpring(SPNodeRef node, SPSpringRef spring);

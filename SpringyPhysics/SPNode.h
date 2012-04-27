@@ -16,7 +16,9 @@ struct _SPNode {
     int retainCount;
     
     __unsafe_unretained SPMeshView *mesh;
-    CFArrayRef springs;
+    SPSpringRef *springs;
+    int numSprings;
+    int numSpringsAllocd;
     
     CGFloat damp;
     CGFloat mass;

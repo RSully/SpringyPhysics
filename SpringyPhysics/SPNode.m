@@ -16,21 +16,34 @@ SPNodeRef SPNodeCreate(CGFloat damp, CGFloat mass, SPMeshView *mesh) {
     node->damp = damp;
     node->mass = mass;
     node->mesh = mesh;
-    node->springs = CFArrayCreateMutable(kCFAllocatorDefault, 0, &kCFTypeArrayCallBacks);
+    
+    node->numSpringsAllocd = 8;
+    node->numSprings = 0;
+    node->springs = malloc(node->numSpringsAllocd * sizeof(SPSpringRef));
+    
     node->velocity = SPVectorMake(0, 0);
     node->position = CGPointMake(0, 0);
     node->lockPosition = NO;
+    
     node->retainCount = 1;
+    return node;
+}
+
+
+SPNodeRef SPNodeRetain(SPNodeRef node) {
+    node->retainCount++;
     return node;
 }
 
 void SPNodeRelease(SPNodeRef node) {
     node->retainCount--;
+    
     if (node->retainCount <= 0) {
-        CFRelease(node->springs);
+        free(node->springs);
         free(node);
     }
 }
+
 
 SPVector SPNodeGetNetForce(SPNodeRef node) {
     SPVector force = SPVectorMake(0.0, 0.0);
@@ -50,13 +63,32 @@ SPVector SPNodeGetVelocity(SPNodeRef node) {
     return node->lockPosition ? SPVectorMake(0, 0) : node->velocity;
 }
 
+
 void SPNodeAddSpring(SPNodeRef node, SPSpringRef spring) {
-    if (CFArrayContainsValue(node->springs, 0, spring)) return;
-    CFArrayAppendValue(node->springs, spring);
+    for (int i = 0; i < node->numSprings; i++) {
+        SPSpringRef s = node->springs[i];
+        if (spring == s) return;
+    }
+    
+    if (node->numSprings == node->numSpringsAllocd) {
+        node->numSpringsAllocd += 6;
+        node->springs = realloc(node->springs, node->numSpringsAllocd * sizeof(SPSpringRef));
+    }
+    node->springs[node->numSprings++] = SPSpringRetain(spring);
 }
+
 void SPNodeRemoveSpring(SPNodeRef node, SPSpringRef spring) {
-    while ((CFIndex ind = CFArrayGetFirstIndexOfValue(node->springs, 0, spring))) {
-        CFArrayRemoveValueAtIndex(node->springs, ind);
+    for (int i = 0; i < node->numSprings; i++) {
+        SPSpringRef s = node->springs[i];
+        if (spring == s) {
+            SPSpringRelease(s);
+            node->numSprings--;
+            
+            for (int n = i; n < node->numSprings; n++) {
+                node->springs[n] = node->springs[n+1];
+            }
+            return;
+        }
     }
 }
 

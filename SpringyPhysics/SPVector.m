@@ -23,7 +23,7 @@ SPVector SPVectorMakePolar(float a, float m) {
 
 
 SPVector SPVectorSum(SPVector v1, SPVector v2) {
-    return SPVectorMake(v1.x + v2.x, v1.x + v2.x);
+    return SPVectorMake(v1.x + v2.x, v1.y + v2.y);
 }
 
 

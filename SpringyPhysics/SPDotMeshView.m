@@ -117,6 +117,7 @@
 
 -(void)quadTap:(UITapGestureRecognizer*)sender {
     SPNodeRef node = [self getNodeAtPoint:[sender locationInView:self]];
+    if (!node) return;
     node->lockPosition = !node->lockPosition;
 }
 

@@ -60,23 +60,22 @@
     
     CGContextSetRGBStrokeColor(ctx, 0.0, 0.0, 0.0, 1.0);
     CGContextSetLineWidth(ctx, 5.0);
-    for (int i = 0; i < [springs count]; i++) {
-        SPSpring *spring = [springs objectAtIndex:i];
-        NSArray *sNodes = [[spring nodes] allObjects];
-        SPNode *node1 = [sNodes objectAtIndex:0];
-        SPNode *node2 = [sNodes objectAtIndex:1];
+    for (int i = 0; i < numSprings; i++) {
+        SPSpringRef spring = springs[i];
+        SPNodeRef node1 = spring->node1;
+        SPNodeRef node2 = spring->node2;
         
-        CGPoint points[2] = {node1.position, node2.position};
+        CGPoint points[2] = {node1->position, node2->position};
         CGContextStrokeLineSegments(ctx, points, 2);
     }
     
     CGContextSetRGBStrokeColor(ctx, 0.6, 0.6, 0.4, 1.0);
     CGContextSetRGBFillColor(ctx, (70.0/255.0), (70.0/255.0), (65.0/255.0), 1.0);
-    for (int i = 0; i < [nodes count]; i++) {
-        SPNode *node = [nodes objectAtIndex:i];
+    for (int i = 0; i < numNodes; i++) {
+        SPNodeRef node = nodes[i];
         
         CGContextSaveGState(ctx);
-        if (node.lockPosition) {
+        if (node->lockPosition) {
             CGContextSetRGBFillColor(ctx, 1.0, 0.6, 0.4, 1.0);
         }
         CGContextFillEllipseInRect(ctx, [self rectForNode:node]);
@@ -96,34 +95,32 @@
 }
 
 -(void)tripleTap:(UITapGestureRecognizer*)sender {
-    SPNode *node = [self getNodeAtPoint:[sender locationInView:self]];
+    SPNodeRef node = [self getNodeAtPoint:[sender locationInView:self]];
     
     if (node && _tripleTapNode && (node != _tripleTapNode)) {
         BOOL exists = NO;
         
-        for (SPSpring *spring in springs) {
-            if ([[spring nodes] containsObject:node] && [[spring nodes] containsObject:_tripleTapNode]) {
+        for (int i = 0; i < numSprings; i++) {
+            SPSpringRef spring = springs[i];
+            if ((spring->node1 == node || spring->node2 == node) && (spring->node1 == _tripleTapNode || spring->node2 == _tripleTapNode)) {
                 exists = YES;
                 break;
             }
         }
         
         if (!exists) {
-            [springs addObject:[SPSpring springWithRate:kSpringRate node:node node:_tripleTapNode]];
+            [self addSpring:SPSpringCreate(kSpringRate, node, _tripleTapNode)];
         }
     }
     _tripleTapNode = node;
 }
 
 -(void)quadTap:(UITapGestureRecognizer*)sender {
-    SPNode *node = [self getNodeAtPoint:[sender locationInView:self]];
-    node.lockPosition = !node.lockPosition;
+    SPNodeRef node = [self getNodeAtPoint:[sender locationInView:self]];
+    node->lockPosition = !node->lockPosition;
 }
 
 -(void)quintTap:(UITapGestureRecognizer*)sender {
-    [nodes removeAllObjects];
-    [springs removeAllObjects];
-    
     int ltr = 8;
     int ttb = 10;
     CGFloat width = self.frame.size.width;
@@ -134,20 +131,20 @@
     for (int x = 0; x < ltr; x++) {
         for (int y = 0; y < ttb; y++) {
             CGPoint pos = CGPointMake(kNodeRadius+(x*sepW), kNodeRadius+(y*sepH));
-            SPNode *n = [self addNodeToPoint:pos];
+            SPNodeRef n = [self addNodeToPoint:pos];
             
             if (x == 0 || y == 0 || x == (ltr-1) || y == (ttb-1)) {
-                n.lockPosition = YES;
+                n->lockPosition = YES;
             }
         }
     }
     
-    for (int n = 1; n < [nodes count]; n++) {
+    for (int n = 1; n < numNodes; n++) {
         if (n % (ttb) == 0) continue;
-        [springs addObject:[SPSpring springWithRate:kSpringRate node:[nodes objectAtIndex:n] node:[nodes objectAtIndex:n-1]]];
+        [self addSpring:SPSpringCreate(kSpringRate, nodes[n], nodes[n-1])];
     }
-    for (int n = 1; n < [nodes count]-(ttb-1); n++) {
-        [springs addObject:[SPSpring springWithRate:kSpringRate node:[nodes objectAtIndex:n-1] node:[nodes objectAtIndex:(ttb-1)+n]]];
+    for (int n = 1; n < numNodes-(ttb-1); n++) {
+        [self addSpring:SPSpringCreate(kSpringRate, nodes[n-1], nodes[(ttb-1)+n])];
     }
 }
 

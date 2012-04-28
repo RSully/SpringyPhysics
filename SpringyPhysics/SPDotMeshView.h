@@ -9,7 +9,7 @@
 #import "SPMeshView.h"
 
 @interface SPDotMeshView : SPMeshView {
-    SPNode *_tripleTapNode;
+    SPNodeRef _tripleTapNode;
 }
 
 @end

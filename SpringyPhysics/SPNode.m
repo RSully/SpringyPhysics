@@ -69,8 +69,7 @@ SPVector SPNodeGetVelocity(SPNodeRef node) {
 
 void SPNodeAddSpring(SPNodeRef node, SPSpringRef spring) {
     for (int i = 0; i < node->numSprings; i++) {
-        SPSpringRef s = node->springs[i];
-        if (spring == s) return;
+        if (spring == node->springs[i]) return;
     }
     
     if (node->numSprings == node->numSpringsAllocd) {

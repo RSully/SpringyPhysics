@@ -84,6 +84,8 @@
     
     if (pan.state == UIGestureRecognizerStateBegan) {
         _dragNode = [self getNodeAtPoint:panPoint];
+    } else if (!_dragNode) {
+        return;
     } else if (pan.state == UIGestureRecognizerStateChanged) {
         _dragNode->position = panPoint;
     } else if (pan.state == UIGestureRecognizerStateEnded) {

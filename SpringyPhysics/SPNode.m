@@ -59,7 +59,8 @@ SPVector SPNodeGetNetForce(SPNodeRef node) {
 }
 
 SPVector SPNodeGetDampingForce(SPNodeRef node) {
-    return SPVectorMake(-1 * node->damp * node->velocity.x, -1 * node->damp * node->velocity.y);
+    SPVector vel = SPNodeGetVelocity(node);
+    return SPVectorMake(-1 * node->damp * vel.x, -1 * node->damp * vel.y);
 }
 
 SPVector SPNodeGetVelocity(SPNodeRef node) {

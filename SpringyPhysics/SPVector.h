@@ -8,22 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SPVector : NSObject {
-    CGFloat x;
-    CGFloat y;
-}
 
--(id)initWithX:(CGFloat)w Y:(CGFloat)h;
+typedef struct {
+    float x;
+    float y;
+} SPVector;
 
-+(id)vectorWithMagnitude:(CGFloat)mag angle:(CGFloat)theta;
-+(id)vectorWithX:(CGFloat)x y:(CGFloat)y;
-+(id)vectorByAddingVector:(id)v1 toVector:(id)v2;
+SPVector SPVectorMake(float x, float y);
+SPVector SPVectorMakePolar(float a, float m);
+SPVector SPVectorSum(SPVector v1, SPVector v2);
 
--(id)vectorByAddingVector:(SPVector*)v;
-
--(CGFloat)angle;
--(CGFloat)magnitude;
--(CGFloat)x;
--(CGFloat)y;
-
-@end
+float SPVectorGetAngle(SPVector vector);
+float SPVectorGetMagnitude(SPVector vector);

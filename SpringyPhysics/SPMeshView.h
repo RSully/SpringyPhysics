@@ -12,28 +12,38 @@
 #import "SPDragNodeInfo.h"
 #import <QuartzCore/QuartzCore.h>
 
+#define kNodesAllocd 12
+#define kSpringsAllocd 8
+
 #define kNodeRadius 32.0
 #define kSpringRate 1.6
 #define kSpringDamp 0.2
 #define kNodeMass 1.2
-#define kFPS 35.0
 
 
 @interface SPMeshView : UIView {
-    NSMutableArray *nodes;
-    NSMutableArray *springs;
+    SPNodeRef *nodes;
+    int numNodes;
+    int numNodesAllocd;
+    SPSpringRef *springs;
+    int numSprings;
+    int numSpringsAllocd;
     
     CADisplayLink *displayLink;
     NSTimer *animationTimer;
     NSDate *lastAnimation;
     
-    SPNode *_dragNode;
+    SPNodeRef _dragNode;
 }
 
--(SPNode*)addNodeToPoint:(CGPoint)pt;
--(SPNode*)getNodeAtPoint:(CGPoint)pt;
--(NSArray*)springsForNode:(SPNode*)node;
--(CGRect)rectForNode:(SPNode*)node;
+-(SPNodeRef)addNodeToPoint:(CGPoint)pt;
+-(SPNodeRef)getNodeAtPoint:(CGPoint)pt;
+-(CGRect)rectForNode:(SPNodeRef)node;
+
+-(void)addNode:(SPNodeRef)node;
+-(void)removeNode:(SPNodeRef)node;
+-(void)addSpring:(SPSpringRef)spring;
+-(void)removeSpring:(SPSpringRef)spring;
 
 -(void)startAnimation;
 -(void)stopAnimation;

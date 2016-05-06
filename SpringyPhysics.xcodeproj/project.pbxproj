@@ -23,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2B8DD772154B5DA100B59EEC /* SPMeshStructures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPMeshStructures.h; sourceTree = "<group>"; };
 		2BA7EA1115475585003091EE /* SPDotMeshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDotMeshView.h; sourceTree = "<group>"; };
 		2BA7EA1215475585003091EE /* SPDotMeshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDotMeshView.m; sourceTree = "<group>"; };
 		2BC2F40C153B280000BB5A3F /* SpringyPhysics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpringyPhysics.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -137,6 +138,7 @@
 		2BC2F42B153B298900BB5A3F /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				2B8DD772154B5DA100B59EEC /* SPMeshStructures.h */,
 				2BC2F42C153B2AE400BB5A3F /* SPNode.h */,
 				2BC2F42D153B2AE400BB5A3F /* SPNode.m */,
 				2BC2F42F153B3FAD00BB5A3F /* SPSpring.h */,

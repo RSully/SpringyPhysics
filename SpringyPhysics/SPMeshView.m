@@ -18,8 +18,12 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        nodes = [NSMutableArray new];
-        springs = [NSMutableArray new];
+        numSprings = 0;
+        numSpringsAllocd = kSpringsAllocd;
+        springs = malloc(numSpringsAllocd * sizeof(SPSpringRef));
+        numNodes = 0;
+        numNodesAllocd = kNodesAllocd;
+        nodes = malloc(numNodesAllocd * sizeof(SPNodeRef));
                 
         displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(animate:)];
         displayLink.paused = YES;
@@ -47,16 +51,19 @@
 -(void)animate:(id)sender {
     CGFloat time = [[NSDate date] timeIntervalSinceDate:lastAnimation];
     
-    for (SPNode *node in nodes) {
-        SPVector *force = [node netForce];
-        SPVector *accel = [SPVector vectorWithX:force.x/node.mass y:force.y/node.mass];
-        node.velocity = [node.velocity vectorByAddingVector:[SPVector vectorWithX:accel.x*time y:accel.y*time]];
+    for (int i = 0; i < numNodes; i++) {
+        SPNodeRef node = nodes[i];
+        SPVector force = SPNodeGetNetForce(node);
+        SPVector accel = SPVectorMake(force.x/node->mass, force.y/node->mass);
+        node->velocity = SPVectorSum(SPNodeGetVelocity(node), SPVectorMake(accel.x*time, accel.y*time));
     }
     
-    for (SPNode *node in nodes) {
+    for (int i = 0; i < numNodes; i++) {
+        SPNodeRef node = nodes[i];
         if (node == _dragNode) continue;
         
-        node.position = CGPointMake(node.position.x+(node.velocity.x*time), node.position.y+(node.velocity.y*time));
+        SPVector vel = SPNodeGetVelocity(node);
+        node->position = CGPointMake(node->position.x+(vel.x*time), node->position.y+(vel.y*time));
         // This is supposed to bound the nodes to the screen
         //node.position = CGPointMake(MIN(self.bounds.size.width-kNodeRadius, node.position.x), MIN(self.bounds.size.height-kNodeRadius, node.position.y));
         //node.position = CGPointMake(MAX(self.bounds.origin.x+kNodeRadius, node.position.x), MAX(self.bounds.origin.y+kNodeRadius, node.position.y));
@@ -77,11 +84,13 @@
     
     if (pan.state == UIGestureRecognizerStateBegan) {
         _dragNode = [self getNodeAtPoint:panPoint];
+    } else if (!_dragNode) {
+        return;
     } else if (pan.state == UIGestureRecognizerStateChanged) {
-        _dragNode.position = panPoint;
+        _dragNode->position = panPoint;
     } else if (pan.state == UIGestureRecognizerStateEnded) {
         CGPoint vel = [pan velocityInView:self];
-        _dragNode.velocity = [SPVector vectorWithX:vel.x y:vel.y];
+        _dragNode->velocity = SPVectorMake(vel.x, vel.y);
         
         _dragNode = nil;
     }
@@ -89,27 +98,64 @@
 
 #pragma - Helpers
 
--(SPNode*)addNodeToPoint:(CGPoint)pt {
-    SPNode *node = [SPNode nodeWithDamp:kSpringDamp point:pt mass:kNodeMass];
-    node.mesh = self;
-    [nodes addObject:node];
+-(SPNodeRef)addNodeToPoint:(CGPoint)pt {
+    SPNodeRef node = SPNodeCreate(kSpringDamp, kNodeMass, self);
+    node->position = pt;
+    [self addNode:node];
     return node;
 }
 
--(NSArray*)springsForNode:(SPNode*)node {
-    NSLog(@"Calling -springsForNode *** Bad on performance");
-    
-    NSMutableArray *nSprings = [NSMutableArray new];
-    for (SPSpring *spring in springs) {
-        if ([[spring nodes] containsObject:node]) {
-            [nSprings addObject:spring];
+-(void)addNode:(SPNodeRef)node {
+    for (int i = 0; i < numNodes; i++) {
+        if (nodes[i] == node) return;
+    }
+    if (numNodes == numNodesAllocd) {
+        numNodesAllocd += kNodesAllocd;
+        nodes = realloc(nodes, numNodesAllocd * sizeof(SPNodeRef));
+    }
+    nodes[numNodes++] = SPNodeRetain(node);
+}
+-(void)removeNode:(SPNodeRef)node {
+    for (int i = 0; i < numNodes; i++) {
+        SPNodeRef _n = nodes[i];
+        if (node == _n) {
+            SPNodeRelease(_n);
+            numNodes--;
+            
+            for (int n = i; n < numNodes; n++) {
+                nodes[n] = nodes[n+1];
+            }
         }
     }
-    return nSprings;
+}
+-(void)addSpring:(SPSpringRef)spring {
+    for (int i = 0; i < numNodes; i++) {
+        if (springs[i] == spring) return;
+    }
+    if (numNodes == numNodesAllocd) {
+        numSpringsAllocd += kSpringsAllocd;
+        springs = realloc(springs, numSpringsAllocd * sizeof(SPSpringRef));
+    }
+    springs[numSprings++] = SPSpringRetain(spring);
+}
+-(void)removeSpring:(SPSpringRef)spring {
+    for (int i = 0; i < numSprings; i++) {
+        SPSpringRef _s = springs[i];
+        if (spring == _s) {
+            SPSpringRelease(_s);
+            numSprings--;
+            
+            for (int n = i; n < numSprings; n++) {
+                springs[n] = springs[n+1];
+            }
+        }
+    }
 }
 
--(SPNode*)getNodeAtPoint:(CGPoint)pt {
-    for (SPNode *node in nodes) {
+
+-(SPNodeRef)getNodeAtPoint:(CGPoint)pt {
+    for (int i = 0; i < numNodes; i++) {
+        SPNodeRef node = nodes[i];
         CGPathRef path = CGPathCreateWithEllipseInRect([self rectForNode:node], nil);
         if (CGPathContainsPoint(path, nil, pt, NO)) {
             return node;
@@ -119,9 +165,9 @@
 }
 
 
--(CGRect)rectForNode:(SPNode*)node {
-    return CGRectMake(node.position.x-kNodeRadius, 
-                      node.position.y-kNodeRadius, 
+-(CGRect)rectForNode:(SPNodeRef)node {
+    return CGRectMake(node->position.x-kNodeRadius, 
+                      node->position.y-kNodeRadius, 
                       kNodeRadius*2, kNodeRadius*2);
 }
 
